@@ -1,5 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import Family from '../Family/Family';
+import Units from '../Units/Units';
 import FamilyInfo from '../Family/FamilyInfo';
 import Container from '../common/Container/Container';
 import config from '../../config';
@@ -61,9 +62,15 @@ class App extends PureComponent {
             />
           </Fragment>
         }
-        <pre>
+        {!!this.state.units && (
+          <Units
+            units={this.state.units}
+            onChange={units => console.log({ units })}
+          />
+        )}
+        {/* <pre>
           {JSON.stringify(this.state, null, 2)}
-        </pre>
+        </pre> */}
       </Container>
     );
   }
