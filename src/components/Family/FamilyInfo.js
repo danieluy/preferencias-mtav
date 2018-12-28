@@ -11,7 +11,7 @@ import TextField from '@material-ui/core/TextField';
 
 const FamilyInfo = ({ classes, info, onEdit }) => {
   return (
-    <Card className={classes.card}>
+    <Card>
       <CardHeader
         title="Familia"
         subheader="Información"
