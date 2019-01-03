@@ -12,15 +12,17 @@ class Unit extends PureComponent {
   render() {
     const { classes, unit, units, onChange, onReset } = this.props;
     const priorities = units[`${unit.dorms}Priorities`].filter(p => !p.unit);
+    const unitHasPriority = unit.priority !== -1;
     return (
       <div className={classes.unit}>
         <Typography
           variant="h6"
           align="center"
+          color="primary"
         >
           {unit.id}
         </Typography>
-        {unit.priority === -1
+        {!unitHasPriority
           ? (
             <TextField
               select
