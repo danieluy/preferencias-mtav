@@ -1,125 +1,98 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { actions } from '../../redux';
 // Material UI
 import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/EditOutlined';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogActions from '@material-ui/core/DialogActions';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Radio from '@material-ui/core/Radio';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
 
-class Family extends PureComponent {
-  constructor() {
-    super();
-    this.state = {
-      id: '',
-      name: '',
-      dorms: '',
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.save = this.save.bind(this);
-    this.checkLocalStorage = this.checkLocalStorage.bind(this);
-  }
-
-  componentDidMount() {
-    this.checkLocalStorage();
-  }
-
-  checkLocalStorage() {
-    try {
-      const stored = JSON.parse(localStorage.getItem('FAMILY_INFO'))
-      this.setState({ ...stored });
-    }
-    catch (err) {
-      this.setState({
-        id: '',
-        name: '',
-        dorms: '',
-      })
-    }
-  }
-
-  handleChange(evt) {
-    const name = evt.currentTarget.getAttribute('name');
-    const value = evt.currentTarget.value;
-    this.setState({ [name]: value });
-  }
-
-  save() {
-    const { id, name, dorms } = this.state;
-    this.props.onChange({ id, name, dorms: parseInt(dorms) });
-    localStorage.setItem('FAMILY_INFO', JSON.stringify(this.state));
-  }
-
-  render() {
-    const { classes } = this.props;
-    return (
-      <Dialog
-        className="family-wrapper"
-        open={true}
-        onClose={this.handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Familia</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Ingrese los datos solicitados.
-          </DialogContentText>
-          <TextField
-            id="id"
-            name="id"
-            label="Nº"
-            value={this.state.id}
-            onChange={this.handleChange}
-            margin="normal"
-            variant="outlined"
-            type="number"
-            fullWidth
-          />
-          <TextField
-            id="name"
-            name="name"
-            label="Nombre"
-            value={this.state.name}
-            onChange={this.handleChange}
-            margin="normal"
-            variant="outlined"
-            fullWidth
-          />
-          <RadioGroup
-            aria-label="Cantidad de dormitorios"
-            name="dorms"
-            className={classes.group}
-            value={this.state.dorms}
-            onChange={this.handleChange}
-          >
-            <FormControlLabel value={'2'} control={<Radio />} label="2 dormitorios" />
-            <FormControlLabel value={'3'} control={<Radio />} label="3 dormitorios" />
-            <FormControlLabel value={'4'} control={<Radio />} label="4 dormitorios" disabled />
-          </RadioGroup>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" color="primary" onClick={this.save} autoFocus>
-            Guardar
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-}
+const Family = ({ classes, id, name, dorms, openForm }) => {
+  return (
+    <Card>
+      <CardHeader
+        title="Familia"
+        subheader="Información"
+        action={(
+          <IconButton>
+            <EditIcon onClick={openForm} />
+          </IconButton>
+        )}
+      />
+      <CardContent>
+        {/* <TextLabel label="Número" value={id} />
+        <TextLabel label="Nombre" value={name} />
+        <TextLabel label="Dormitorios" value={dorms.toString()} /> */}
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Número</TableCell>
+              <TableCell>Nombre</TableCell>
+              <TableCell>Dormitorios</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell>{id}</TableCell>
+              <TableCell>{name}</TableCell>
+              <TableCell>{dorms}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  );
+};
 
 Family.propTypes = {
   classes: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  dorms: PropTypes.number.isRequired,
+  openForm: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Family);
+const FamilyWithStyles = withStyles(styles)(Family);
+export default connect(mapStateToProps, mapDispatchToProps)(FamilyWithStyles);
+
+function mapStateToProps({ family }) {
+  return {
+    ...family,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    openForm: () => dispatch({ type: actions.FAMILY_FORM_OPEN, payload: true }),
+  };
+}
+
+function TextLabel({ label, value }) {
+  return (
+    <TextField
+      label={label}
+      value={value}
+      margin="normal"
+      variant="outlined"
+      fullWidth
+      disabled
+    />
+  );
+}
+
+TextLabel.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+};
 
 function styles(theme) {
   return {
@@ -127,4 +100,4 @@ function styles(theme) {
       margin: `${theme.spacing.unit}px 0`,
     },
   };
-};
+}

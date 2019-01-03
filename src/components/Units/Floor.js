@@ -12,7 +12,7 @@ class Floor extends PureComponent {
     window.units = units;
     return (
       <div id={`floor-${floor}`} className={classes.floor}>
-        {units.map(unit => <Unit key={unit.unit} data={unit} />)}
+        {units.map(unit => <Unit key={unit.id} unit={unit} />)}
       </div>
     );
   }

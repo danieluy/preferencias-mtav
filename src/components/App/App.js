@@ -1,79 +1,54 @@
 import React, { PureComponent, Fragment } from 'react';
-import Family from '../Family/Family';
+import PropTypes from 'prop-types';
+import FamilyForm from '../Family/FamilyForm';
 import Units from '../Units/Units';
-import FamilyInfo from '../Family/FamilyInfo';
+import Family from '../Family/Family';
 import Container from '../common/Container/Container';
 import config from '../../config';
-
+import { connect } from 'react-redux';
+import { actions } from '../../redux';
+// Material UI
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 
 class App extends PureComponent {
-  constructor() {
-    super();
-    this.state = {
-      family: {},
-      units: null,
-    }
-    this.setAllowedUnits = this.setAllowedUnits.bind(this);
-    this.setFamilyInfo = this.setFamilyInfo.bind(this);
-  }
-
   componentDidMount() {
-    this.validateUnitsConfig();
-    this.setAllowedUnits();
-  }
-
-  setAllowedUnits() {
-    if (this.state.family.dorms) {
-      const dorms = `d${this.state.family.dorms}`;
-      const units = config.units[dorms]
-        .map(unit => ({ unit, priority: -1 }));
-      this.setState({ units });
-    }
-  }
-
-  validateUnitsConfig() {
-    const { units } = config;
-    const totalOk = units.d2.length + units.d3.length + units.d4.length === units.total;
-    if (!totalOk)
-      throw new Error('La cantidad de apartamentos no coincide con el total declarado.');
-  }
-
-  get familyInfoCompleted() {
-    return !!this.state.family.id && !!this.state.family.name && !!this.state.family.dorms;
-  }
-
-  setFamilyInfo(family) {
-    this.setState({
-      family
-    }, this.setAllowedUnits);
+    this.props.initAppState();
   }
 
   render() {
     return (
-      <Container className="app-wrapper">
-        {!this.familyInfoCompleted &&
-          <Family onChange={this.setFamilyInfo} />
-        }
-        {this.familyInfoCompleted &&
-          <Fragment>
-            <FamilyInfo
-              onEdit={() => this.setState({ family: {} })}
-              info={this.state.family}
-            />
-          </Fragment>
-        }
-        {!!this.state.units && (
-          <Units
-            units={this.state.units}
-            onChange={units => console.log({ units })}
-          />
-        )}
-        {/* <pre>
-          {JSON.stringify(this.state, null, 2)}
-        </pre> */}
-      </Container>
+      <Fragment>
+        <AppBar position="static" color="default">
+          <Toolbar>
+            <Typography variant="h5" color="inherit">
+              Preferencias MTAV
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Container className="app-wrapper">
+          <Family />
+          <FamilyForm />
+          <Units />
+        </Container>
+      </Fragment>
     );
   }
 }
 
-export default App;
+App.propTypes = {
+  initAppState: PropTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+function mapStateToProps({ familyForm }) {
+  return {};
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    initAppState: () => dispatch({ type: actions.INIT_APP_STATE }),
+  };
+}

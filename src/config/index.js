@@ -1,7 +1,7 @@
 import units from './units';
 
 export const config = {
-  units
+  units,
 };
 
 export default { ...config };
