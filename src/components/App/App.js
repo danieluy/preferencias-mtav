@@ -1,11 +1,15 @@
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import FamilyForm from '../Family/FamilyForm';
-import Units from '../Units/Units';
-import Container from '../common/Container/Container';
 import { connect } from 'react-redux';
 import { actions } from '../../redux';
+import FamilyForm from '../Family/FamilyForm';
+import Units from '../Units/Units';
+import Priorities from '../Priority/Priorities';
+import Container from '../common/Container/Container';
 import AppBar from '../AppBar/AppBar';
+// Material UI
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 
 class App extends PureComponent {
   componentDidMount() {
@@ -18,7 +22,14 @@ class App extends PureComponent {
         <AppBar />
         <Container className="app-wrapper">
           <FamilyForm />
-          <Units />
+          <Grid container spacing={24}>
+            <Grid item xs={9}>
+              <Units />
+            </Grid>
+            <Grid item xs={3}>
+              <Priorities />
+            </Grid>
+          </Grid>
         </Container>
       </Fragment>
     );

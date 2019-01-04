@@ -24,17 +24,18 @@ const FAMILY_FORM_OPEN = (state, open) => {
 
 const UNIT_PRIORITY_CHANGE = (state, payload) => {
   const { unit, priority } = payload;
+  let newUnit;
   const units = state.units[unit.dorms].map((u) => {
     if (u.id === unit.id) {
-      const newUnit = new Unit(unit.id, null, priority);
+      newUnit = new Unit(unit.id, null, priority);
       newUnit.dorms = unit.dorms;
       return newUnit;
     }
     return u;
   });
-  const priorities = state.units[`${unit.dorms}Priorities`].map((p) => {
+  const priorities = state.units[`${newUnit.dorms}Priorities`].map((p) => {
     if (p.id === priority) {
-      const newPriority = new Priority(p.id, null, unit);
+      const newPriority = new Priority(p.id, null, newUnit);
       newPriority.dorms = p.dorms;
       return newPriority;
     }
