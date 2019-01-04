@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { actions } from '../../redux';
 import { download } from '../../utils';
+import InputFile from '../InputFile/InputFile';
 // Material UI
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -32,13 +33,13 @@ class AppBarCustom extends PureComponent {
 
   export = () => {
     const { family, units } = this.props;
-    download(`${family.id}_${family.dorms}D`, JSON.stringify({ family, units }, null, 2));
+    download(`${family.id}`, JSON.stringify({ family, units }, null, 2));
     this.closeImportExportMenu();
   }
 
   render() {
     const { anchorEl } = this.state;
-    const { classes, family, openFamilyFrom, units } = this.props;
+    const { classes, family, openFamilyFrom, importData } = this.props;
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -60,7 +61,15 @@ class AppBarCustom extends PureComponent {
                 open={Boolean(anchorEl)}
                 onClose={this.closeImportExportMenu}
               >
-                <MenuItem onClick={this.closeImportExportMenu}>Importar</MenuItem>
+                <InputFile
+                  output="JSON"
+                  onComplete={(json) => {
+                    importData(json);
+                    this.closeImportExportMenu();
+                  }}
+                >
+                  <MenuItem>Importar</MenuItem>
+                </InputFile>
                 <MenuItem onClick={this.export}>Exportar</MenuItem>
               </Menu>
             </Fragment>
@@ -90,8 +99,9 @@ AppBarCustom.propTypes = {
     dorms: PropTypes.number,
   }).isRequired,
   classes: PropTypes.object.isRequired,
-  openFamilyFrom: PropTypes.func.isRequired,
   units: PropTypes.object.isRequired,
+  openFamilyFrom: PropTypes.func.isRequired,
+  importData: PropTypes.func.isRequired,
 };
 
 const AppBarCustomWithStyles = withStyles(styles)(AppBarCustom);
@@ -107,6 +117,7 @@ function mapStateToProps({ family, units }) {
 function mapDispatchToProps(dispatch) {
   return {
     openFamilyFrom: () => dispatch({ type: actions.FAMILY_FORM_OPEN, payload: true }),
+    importData: data => dispatch({ type: actions.IMPORT_FAMILY_DATA, payload: data }),
   };
 }
 

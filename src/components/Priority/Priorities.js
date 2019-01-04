@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // Material UI
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -14,7 +14,12 @@ class Priorities extends PureComponent {
   render() {
     const { classes, units, dorms } = this.props;
     if (!dorms)
-      return <h1>No se ha completado la información necesaria</h1>;
+      return (
+        <Fragment>
+          <Typography variant="h6">Lista de preferencias</Typography>
+          <Typography>No se ha completado la información necesaria</Typography>
+        </Fragment>
+      );
     const priorities = units[`d${dorms}Priorities`];
     return (
       <Fragment>
@@ -28,9 +33,9 @@ class Priorities extends PureComponent {
           <TableBody>
             {priorities.map((piority) => {
               return (
-                <TableRow key={piority.id} dense>
-                  <TableCell dense>{piority.id + 1}</TableCell>
-                  <TableCell dense>{piority.unit ? piority.unit.id : '-'}</TableCell>
+                <TableRow key={piority.id}>
+                  <TableCell>{piority.id + 1}</TableCell>
+                  <TableCell>{piority.unit ? piority.unit.id : '-'}</TableCell>
                 </TableRow>
               );
             })}

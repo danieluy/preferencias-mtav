@@ -111,12 +111,3 @@ function styles(theme) {
     },
   };
 }
-
-function solvePriorities(units) {
-  const priorities = units.map((u, i) => i);
-  units.forEach((unit) => {
-    if (unit.priority !== -1)
-      priorities.splice(unit.priority, 1);
-  });
-  return priorities;
-}

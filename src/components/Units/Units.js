@@ -4,12 +4,18 @@ import Floor from './Floor';
 import { connect } from 'react-redux';
 // Material UI
 import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 class Units extends PureComponent {
   render() {
     const { classes, units, dorms } = this.props;
     if (!dorms)
-      return <h1>No se ha completado la información necesaria</h1>;
+      return (
+        <Fragment>
+          <Typography variant="h6">Selección de preferencias</Typography>
+          <Typography>No se ha completado la información necesaria</Typography>
+        </Fragment>
+      );
     const allowedUnits = units[`d${dorms}`];
     const unitsByFloor = separateUnitsByFloor(allowedUnits);
     const floors = Object.keys(unitsByFloor);

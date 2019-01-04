@@ -9,7 +9,6 @@ import Container from '../common/Container/Container';
 import AppBar from '../AppBar/AppBar';
 // Material UI
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 
 class App extends PureComponent {
   componentDidMount() {

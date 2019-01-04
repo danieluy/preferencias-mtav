@@ -72,12 +72,25 @@ const RELEASE_PRIORITY = (state, unit) => {
   return state;
 };
 
+const IMPORT_FAMILY_DATA = (state, data) => {
+  state = {
+    ...state,
+    ...data,
+    familyForm: {
+      complete: true,
+      open: true,
+    },
+  };
+  return state;
+};
+
 export default {
   INIT_APP_STATE,
   PATCH_FAMILY,
   FAMILY_FORM_OPEN,
   UNIT_PRIORITY_CHANGE,
   RELEASE_PRIORITY,
+  IMPORT_FAMILY_DATA,
 };
 
 /**
