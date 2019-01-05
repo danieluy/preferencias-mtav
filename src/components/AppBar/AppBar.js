@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { actions } from '../../redux';
 import { download } from '../../utils';
-import InputFile from '../InputFile/InputFile';
+import InputFile from 'ds-react-input-file';
 // Material UI
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
