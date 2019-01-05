@@ -15,8 +15,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && cp -a build docs",
-    "postbuild": "node post-build-script.js",
+    "build": "react-scripts build",
+    "postbuild": "node post-build-script.js && rm -r docs && cp -a build docs",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
