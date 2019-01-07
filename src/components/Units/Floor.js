@@ -31,7 +31,6 @@ Floor.propTypes = {
 export default withStyles(styles)(Floor);
 
 function styles(theme) {
-  console.log(theme)
   return {
     floor: {
       width: '100%',

@@ -84,6 +84,11 @@ const IMPORT_FAMILY_DATA = (state, data) => {
   return state;
 };
 
+const OPEN_TAB_CHANGED = (state, tab) => {
+  state.openTab = tab;
+  return state;
+};
+
 export default {
   INIT_APP_STATE,
   PATCH_FAMILY,
@@ -91,6 +96,7 @@ export default {
   UNIT_PRIORITY_CHANGE,
   RELEASE_PRIORITY,
   IMPORT_FAMILY_DATA,
+  OPEN_TAB_CHANGED,
 };
 
 /**

@@ -12,6 +12,7 @@ export default {
     open: false,
   },
   units: formatUnits(config.units),
+  openTab: 0,
 };
 
 function formatUnits(units) {

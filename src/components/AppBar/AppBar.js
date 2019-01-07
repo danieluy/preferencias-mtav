@@ -14,6 +14,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheckOutlined';
 import SaveIcon from '@material-ui/icons/SaveOutlined';
 import ImportExportIcon from '@material-ui/icons/ImportExportOutlined';
@@ -37,9 +39,14 @@ class AppBarCustom extends PureComponent {
     this.closeImportExportMenu();
   }
 
+  handleTabChange = (event, tab) => {
+    const { changeTab } = this.props;
+    changeTab(tab);
+  };
+
   render() {
-    const { anchorEl } = this.state;
-    const { classes, family, openFamilyFrom, importData } = this.props;
+    const { anchorEl, tab } = this.state;
+    const { classes, family, openFamilyFrom, importData, openTab } = this.props;
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -86,6 +93,11 @@ class AppBarCustom extends PureComponent {
               </Button>
             </Tooltip>
           </Toolbar>
+
+          <Tabs value={openTab} onChange={this.handleTabChange} className={classes.tabs}>
+            <Tab label="Selección" />
+            <Tab label="Lista" />
+          </Tabs>
         </AppBar>
       </div>
     );
@@ -102,15 +114,18 @@ AppBarCustom.propTypes = {
   units: PropTypes.object.isRequired,
   openFamilyFrom: PropTypes.func.isRequired,
   importData: PropTypes.func.isRequired,
+  changeTab: PropTypes.func.isRequired,
+  openTab: PropTypes.number.isRequired,
 };
 
 const AppBarCustomWithStyles = withStyles(styles)(AppBarCustom);
 export default connect(mapStateToProps, mapDispatchToProps)(AppBarCustomWithStyles);
 
-function mapStateToProps({ family, units }) {
+function mapStateToProps({ family, units, openTab }) {
   return {
     family,
     units,
+    openTab,
   };
 }
 
@@ -118,6 +133,7 @@ function mapDispatchToProps(dispatch) {
   return {
     openFamilyFrom: () => dispatch({ type: actions.FAMILY_FORM_OPEN, payload: true }),
     importData: data => dispatch({ type: actions.IMPORT_FAMILY_DATA, payload: data }),
+    changeTab: tab => dispatch({ type: actions.OPEN_TAB_CHANGED, payload: tab }),
   };
 }
 
@@ -132,5 +148,10 @@ function styles(theme) {
     menuButton: {
       marginRight: 20,
     },
+    tabs: {
+      [theme.breakpoints.up('md')]: {
+        display: 'none',
+      },
+    }
   };
 }
