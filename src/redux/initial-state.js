@@ -13,6 +13,7 @@ export default {
   },
   units: formatUnits(config.units),
   openTab: 0,
+  unsavedChanges: false,
 };
 
 function formatUnits(units) {

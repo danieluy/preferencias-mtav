@@ -1,9 +1,11 @@
 import Unit from '../aux-classes/Unit';
 import { Priority } from '../aux-classes';
+import initialState from './initial-state';
+import { store } from '../redux';
 
 const INIT_APP_STATE = (state) => {
-  const { id, name, dorms } = loadFamilyInfo();
-  state.family = Object.assign({}, state.family, { id, name, dorms });
+  const stored = loadStoredInfo();
+  state = { ...stored };
   const complete = isFamilyInfoComplete(state);
   const open = !complete;
   state.familyForm = Object.assign({}, state.familyForm, { complete, open });
@@ -14,6 +16,8 @@ const PATCH_FAMILY = (state, data) => {
   state.family = Object.assign({}, state.family, data);
   const complete = isFamilyInfoComplete(state);
   state.familyForm = Object.assign({}, state.familyForm, { complete });
+  state.unsavedChanges = true;
+  setBeforeUnloadListener(state.unsavedChanges);
   return state;
 };
 
@@ -45,6 +49,8 @@ const UNIT_PRIORITY_CHANGE = (state, payload) => {
     [unit.dorms]: units,
     [`${unit.dorms}Priorities`]: priorities,
   });
+  state.unsavedChanges = true;
+  setBeforeUnloadListener(state.unsavedChanges);
   return state;
 };
 
@@ -69,6 +75,8 @@ const RELEASE_PRIORITY = (state, unit) => {
     [unit.dorms]: units,
     [`${unit.dorms}Priorities`]: priorities,
   });
+  state.unsavedChanges = true;
+  setBeforeUnloadListener(state.unsavedChanges);
   return state;
 };
 
@@ -81,11 +89,20 @@ const IMPORT_FAMILY_DATA = (state, data) => {
       open: true,
     },
   };
+  state.unsavedChanges = true;
+  setBeforeUnloadListener(state.unsavedChanges);
   return state;
 };
 
 const OPEN_TAB_CHANGED = (state, tab) => {
   state.openTab = tab;
+  return state;
+};
+
+const SAVE_FULL_STATE = (state) => {
+  window.localStorage.setItem('FULL_STATE', JSON.stringify(state));
+  state.unsavedChanges = false;
+  setBeforeUnloadListener(state.unsavedChanges);
   return state;
 };
 
@@ -97,6 +114,7 @@ export default {
   RELEASE_PRIORITY,
   IMPORT_FAMILY_DATA,
   OPEN_TAB_CHANGED,
+  SAVE_FULL_STATE,
 };
 
 /**
@@ -110,18 +128,31 @@ function isFamilyInfoComplete(state) {
 /**
  * Retrieves the family info from local storage
  */
-function loadFamilyInfo() {
-  const family = {
-    id: '',
-    name: '',
-    dorms: 0,
-  };
+function loadStoredInfo() {
   try {
-    const stored = JSON.parse(localStorage.getItem('FAMILY_INFO'));
-    return stored || family;
+    const stored = JSON.parse(localStorage.getItem('FULL_STATE'));
+    return Object.assign(initialState, stored);
   }
   catch (err) {
     console.error(err);
-    return family;
+    return initialState;
   }
+}
+
+let listening = false;
+function setBeforeUnloadListener(set) {
+  if (set && !listening) {
+    window.addEventListener('beforeunload', handleBeforeunload);
+    listening = true;
+  }
+  else if (listening) {
+    window.removeEventListener('beforeunload', handleBeforeunload);
+    listening = false;
+  }
+}
+
+function handleBeforeunload(evt) {
+  evt.preventDefault();
+  evt.returnValue = '';
+  return 'Hay cambios sin guardar, cerrar?';
 }

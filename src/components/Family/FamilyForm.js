@@ -17,8 +17,8 @@ import Radio from '@material-ui/core/Radio';
 
 class FamilyForm extends PureComponent {
   save = () => {
-    const { family } = this.props;
-    localStorage.setItem('FAMILY_INFO', JSON.stringify(family));
+    // const { family } = this.props;
+    // localStorage.setItem('FAMILY_INFO', JSON.stringify(family));
     this.props.onClose();
   }
 
@@ -71,7 +71,7 @@ class FamilyForm extends PureComponent {
         </DialogContent>
         <DialogActions>
           <Button variant="contained" color="primary" onClick={this.save} autoFocus>
-            Guardar
+            Cerrar
           </Button>
         </DialogActions>
       </Dialog>

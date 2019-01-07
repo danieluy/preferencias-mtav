@@ -19,24 +19,25 @@ import Tab from '@material-ui/core/Tab';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheckOutlined';
 import SaveIcon from '@material-ui/icons/SaveOutlined';
 import ImportExportIcon from '@material-ui/icons/ImportExportOutlined';
+import MoreVertIcon from '@material-ui/icons/MoreVertOutlined';
 
 class AppBarCustom extends PureComponent {
   state = {
     anchorEl: null,
   };
 
-  closeImportExportMenu = () => {
+  closeOptionsMenu = () => {
     this.setState({ anchorEl: null });
   };
 
-  openImportExportMenu = (event) => {
+  openOptionsMenu = (event) => {
     this.setState({ anchorEl: event.currentTarget });
   };
 
   export = () => {
     const { family, units } = this.props;
     download(`${family.id}`, JSON.stringify({ family, units }, null, 2));
-    this.closeImportExportMenu();
+    this.closeOptionsMenu();
   }
 
   handleTabChange = (event, tab) => {
@@ -46,7 +47,7 @@ class AppBarCustom extends PureComponent {
 
   render() {
     const { anchorEl, tab } = this.state;
-    const { classes, family, openFamilyFrom, importData, openTab } = this.props;
+    const { classes, family, openFamilyFrom, importData, openTab, saveData } = this.props;
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -56,42 +57,52 @@ class AppBarCustom extends PureComponent {
               Preferencias MTAV
             </Typography>
 
-            <Fragment>
-              <Tooltip title="Importar/Exportar" aria-label="Importar/Exportar">
-                <IconButton color="inherit" onClick={this.openImportExportMenu}>
-                  <ImportExportIcon color="inherit" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={this.closeImportExportMenu}
-              >
-                <InputFile
-                  output="JSON"
-                  onComplete={(json) => {
-                    importData(json);
-                    this.closeImportExportMenu();
-                  }}
-                >
-                  <MenuItem>Importar</MenuItem>
-                </InputFile>
-                <MenuItem onClick={this.export}>Exportar</MenuItem>
-              </Menu>
-            </Fragment>
-
-            <Tooltip title="Guardar" aria-label="Guardar">
-              <IconButton color="inherit" onClick={() => { }}>
-                <SaveIcon color="inherit" />
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip title="Editar información" aria-label="Editar información">
+            <Tooltip title="Editar información" aria-label="Editar información" className={classes.info}>
               <Button color="inherit" onClick={openFamilyFrom}>
                 {`#${family.id} ${family.name} - ${family.dorms}D`}
               </Button>
             </Tooltip>
+
+            <Tooltip title="Opciones" aria-label="Opciones">
+              <IconButton color="inherit" onClick={this.openOptionsMenu}>
+                <MoreVertIcon color="inherit" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={this.closeOptionsMenu}
+            >
+              <MenuItem
+                className={classes.infoNested}
+                onClick={() => {
+                  openFamilyFrom();
+                  this.closeOptionsMenu();
+                }}
+              >
+                {`#${family.id} ${family.name} - ${family.dorms}D`}
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  saveData();
+                  this.closeOptionsMenu();
+                }}
+              >
+                Guardar
+              </MenuItem>
+              <InputFile
+                output="JSON"
+                onComplete={(json) => {
+                  importData(json);
+                  this.closeOptionsMenu();
+                }}
+              >
+                <MenuItem>Importar</MenuItem>
+              </InputFile>
+              <MenuItem onClick={this.export}>Exportar</MenuItem>
+            </Menu>
+
           </Toolbar>
 
           <Tabs value={openTab} onChange={this.handleTabChange} className={classes.tabs}>
@@ -114,6 +125,7 @@ AppBarCustom.propTypes = {
   units: PropTypes.object.isRequired,
   openFamilyFrom: PropTypes.func.isRequired,
   importData: PropTypes.func.isRequired,
+  saveData: PropTypes.func.isRequired,
   changeTab: PropTypes.func.isRequired,
   openTab: PropTypes.number.isRequired,
 };
@@ -134,6 +146,7 @@ function mapDispatchToProps(dispatch) {
     openFamilyFrom: () => dispatch({ type: actions.FAMILY_FORM_OPEN, payload: true }),
     importData: data => dispatch({ type: actions.IMPORT_FAMILY_DATA, payload: data }),
     changeTab: tab => dispatch({ type: actions.OPEN_TAB_CHANGED, payload: tab }),
+    saveData: () => dispatch({ type: actions.SAVE_FULL_STATE }),
   };
 }
 
@@ -152,6 +165,22 @@ function styles(theme) {
       [theme.breakpoints.up('md')]: {
         display: 'none',
       },
-    }
+    },
+    info: {
+      [theme.breakpoints.down('md')]: {
+        display: 'none',
+      },
+      [theme.breakpoints.up('md')]: {
+        display: 'flex',
+      },
+    },
+    infoNested: {
+      [theme.breakpoints.down('md')]: {
+        display: 'flex',
+      },
+      [theme.breakpoints.up('md')]: {
+        display: 'none',
+      },
+    },
   };
 }
