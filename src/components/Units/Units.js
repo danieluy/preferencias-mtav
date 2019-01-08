@@ -21,7 +21,6 @@ class Units extends PureComponent {
     const floors = Object.keys(unitsByFloor);
     return (
       <Fragment>
-        <Floor units={[]} floor="-100" />
         {floors.reverse().map(floor => <Floor key={floor} units={unitsByFloor[floor]} floor={(floor)} />)}
       </Fragment>
     );

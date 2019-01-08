@@ -36,6 +36,12 @@ function styles(theme) {
       width: '100%',
       display: 'flex',
       flexWrap: 'wrap',
+      [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+      },
+      [theme.breakpoints.up('md')]: {
+        flexDirection: 'row',
+      },
     },
     title: {
       width: 40,

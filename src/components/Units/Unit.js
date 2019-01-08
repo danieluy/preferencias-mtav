@@ -91,8 +91,6 @@ function styles(theme) {
   return {
     unit: {
       position: 'relative',
-      width: 100,
-      height: 100,
       backgroundSolor: '#FFF',
       boxShadow: '0 5px 20px -5px rgba(0, 0, 0, .5)',
       margin: 10,
@@ -103,11 +101,30 @@ function styles(theme) {
       borderRadius: 10,
       flexShrink: 0,
       padding: 10,
+      [theme.breakpoints.down('md')]: {
+        width: '100%',
+        height: 60,
+        flexDirection: 'row',
+        justifyContent: 'space-arround',
+      },
+      [theme.breakpoints.up('md')]: {
+        width: 100,
+        height: 100,
+        flexDirection: 'column',
+      },
     },
     textField: {
-      width: 80,
-      marginTop: 10,
-      marginBottom: 0,
+      [theme.breakpoints.down('md')]: {
+        width: '100%',
+        margin: 0,
+        marginLeft: 10,
+        height: 40,
+      },
+      [theme.breakpoints.up('md')]: {
+        width: 80,
+        marginTop: 10,
+        marginBottom: 0,
+      },
     },
   };
 }
