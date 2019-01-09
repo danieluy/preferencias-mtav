@@ -17,14 +17,16 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheckOutlined';
-import SaveIcon from '@material-ui/icons/SaveOutlined';
-import ImportExportIcon from '@material-ui/icons/ImportExportOutlined';
 import MoreVertIcon from '@material-ui/icons/MoreVertOutlined';
 
 class AppBarCustom extends PureComponent {
   state = {
     anchorEl: null,
   };
+
+  componentDidMount() {
+    document.title = 'Preferencias MTAV';
+  }
 
   closeOptionsMenu = () => {
     this.setState({ anchorEl: null });
@@ -113,7 +115,7 @@ class AppBarCustom extends PureComponent {
       </div>
     );
   }
-};
+}
 
 AppBarCustom.propTypes = {
   family: PropTypes.shape({
