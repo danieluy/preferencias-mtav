@@ -7,6 +7,8 @@ import Units from '../Units/Units';
 import Priorities from '../Priority/Priorities';
 import Container from '../common/Container/Container';
 import AppBar from '../AppBar/AppBar';
+import Bundler from '../Bundler/Bundler';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 // Material UI
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -19,33 +21,41 @@ class App extends PureComponent {
   render() {
     const { classes, openTab } = this.props;
     return (
-      <Fragment>
-        <AppBar />
-        <Container className="app-wrapper">
-          <Grid container spacing={24} className={classes.xs}>
-            <Grid item xs={12}>
-              {openTab === 0 && (
-                <Units />
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              {openTab === 1 && (
-                <Priorities />
-              )}
-            </Grid>
-          </Grid>
+      <Router>
+        <Fragment>
+          <Route path="/" exact component={Bundler} />
+          <Route path="/family" exact render={() => (
+            <Fragment>
+              <AppBar />
+              <Container className="app-wrapper">
+                <Grid container spacing={24} className={classes.xs}>
+                  <Grid item xs={12}>
+                    {openTab === 0 && (
+                      <Units />
+                    )}
+                  </Grid>
+                  <Grid item xs={12}>
+                    {openTab === 1 && (
+                      <Priorities />
+                    )}
+                  </Grid>
+                </Grid>
 
-          <Grid container spacing={24} className={classes.md}>
-            <Grid item xs={9}>
-              <Units />
-            </Grid>
-            <Grid item xs={3}>
-              <Priorities />
-            </Grid>
-          </Grid>
-        </Container>
-        <FamilyForm />
-      </Fragment>
+                <Grid container spacing={24} className={classes.md}>
+                  <Grid item xs={9}>
+                    <Units />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Priorities />
+                  </Grid>
+                </Grid>
+              </Container>
+              <FamilyForm />
+            </Fragment>
+          )}
+          />
+        </Fragment>
+      </Router>
     );
   }
 }
